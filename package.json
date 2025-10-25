@@ -1,7 +1,8 @@
 {
-  "name": "multivendor-frontend",
-  "version": "1.0.0",
+  "name": "multivendor-fronted",
   "private": true,
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,14 +10,13 @@
   },
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "axios": "^1.6.8"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "vite": "^5.2.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "tailwindcss": "^3.4.0",
-    "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.16"
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "vite": "^5.4.2"
   }
 }
