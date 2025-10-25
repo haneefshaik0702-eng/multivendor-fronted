@@ -1,1 +1,2 @@
-export const BASE_URL = "https://multivendor-backend-6ozb.onrender.com";
+const baseUrl = "https://d-6ozb.onrender.com"; // your backend Render URL
+export default baseUrl;
