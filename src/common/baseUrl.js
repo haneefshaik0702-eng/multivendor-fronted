@@ -1,4 +1,2 @@
-
-// src/common/baseUrl.js
-const baseUrl = "https://multivendor-backend.onrender.com"; // replace with your actual Render backend URL
+const baseUrl = "https://multivendor-backend-6ozb.onrender.com";
 export default baseUrl;
