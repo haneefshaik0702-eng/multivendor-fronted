@@ -1,4 +1,4 @@
-import { BASE_URL } from "../common/baseUrl";
+import baseUrl from "../common/baseUrl";
 import React, { useEffect, useState } from "react";
 
 const Products = () => {
@@ -6,11 +6,9 @@ const Products = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/products`)
+    fetch(`${baseUrl}/api/products`)
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
-        }
+        if (!res.ok) throw new Error("Failed to fetch products");
         return res.json();
       })
       .then((data) => setProducts(data))
@@ -20,7 +18,7 @@ const Products = () => {
   return (
     <div>
       {error ? (
-        <p style={{ color: "red" }}>Failed to fetch products.</p>
+        <p style={{ color: "red" }}>Failed to fetch products: {error}</p>
       ) : (
         <ul>
           {products.map((p) => (
