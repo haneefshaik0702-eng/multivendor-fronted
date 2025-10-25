@@ -1,39 +1,64 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from "react";
+import { BASE_URL } from "../common/baseUrl";
 
-export default function Products(){
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const base = import.meta.env.VITE_API_BASE_URL || ''
+const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState("");
 
-  useEffect(()=>{
-    async function load(){
-      try{
-        const res = await fetch(`${base}/api/products`)
-        if(!res.ok) throw new Error('Network response not ok')
-        const data = await res.json()
-        setProducts(data)
-      }catch(e){
-        console.error(e)
-      }finally{
-        setLoading(false)
-      }
-    }
-    load()
-  },[])
+  useEffect(() => {
+    fetch(`${BASE_URL}/api/products`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch products:", err);
+        setError("Failed to fetch products.");
+      });
+  }, []);
+
+  if (error) {
+    return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+  }
+
+  if (products.length === 0) {
+    return <p style={{ textAlign: "center" }}>Loading products...</p>;
+  }
 
   return (
-    <div className="py-8">
-      <h2 className="text-2xl font-semibold mb-4">Products</h2>
-      {loading ? <p>Loading...</p> : null}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {products && products.length ? products.map(p=>(
-          <div key={p._id || p.id || p.name} className="bg-white p-4 rounded shadow">
-            <h3 className="font-semibold">{p.name || p.title}</h3>
-            <p className="text-sm text-gray-600">{p.description || ''}</p>
-            <p className="mt-2 font-medium">₹{p.price || p.cost || '—'}</p>
+    <div style={{ padding: "20px" }}>
+      <h2 style={{ textAlign: "center" }}>Product List</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "20px",
+          marginTop: "20px",
+        }}
+      >
+        {products.map((product) => (
+          <div
+            key={product.id}
+            style={{
+              border: "1px solid #ddd",
+              padding: "10px",
+              borderRadius: "10px",
+              textAlign: "center",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+            }}
+          >
+            <h3>{product.name}</h3>
+            <p>💰 Price: ₹{product.price}</p>
           </div>
-        )) : !loading && <p className="text-sm text-gray-600">No products found or failed to fetch.</p>}
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default ProductList;
