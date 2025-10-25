@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../common/baseUrl";
 
-const ProductList = () => {
+function Products() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
 
@@ -9,13 +9,11 @@ const ProductList = () => {
     fetch(`${BASE_URL}/api/products`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Failed to fetch products");
+          throw new Error("Network response was not ok");
         }
         return res.json();
       })
-      .then((data) => {
-        setProducts(data);
-      })
+      .then((data) => setProducts(data))
       .catch((err) => {
         console.error("Failed to fetch products:", err);
         setError("Failed to fetch products.");
@@ -26,39 +24,20 @@ const ProductList = () => {
     return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
   }
 
-  if (products.length === 0) {
-    return <p style={{ textAlign: "center" }}>Loading products...</p>;
-  }
-
   return (
     <div style={{ padding: "20px" }}>
-      <h2 style={{ textAlign: "center" }}>Product List</h2>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
-        {products.map((product) => (
-          <div
-            key={product.id}
-            style={{
-              border: "1px solid #ddd",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "center",
-              boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-            }}
-          >
-            <h3>{product.name}</h3>
-            <p>💰 Price: ₹{product.price}</p>
-          </div>
-        ))}
-      </div>
+      <h2>Products</h2>
+      {products.length === 0 ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {products.map((item) => (
+            <li key={item._id}>{item.name}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
-};
+}
 
-export default ProductList;
+export default Products;
