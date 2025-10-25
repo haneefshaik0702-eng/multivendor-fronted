@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../common/baseUrl";
+import React, { useEffect, useState } from "react";
 
-function Products() {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
 
@@ -9,35 +9,27 @@ function Products() {
     fetch(`${BASE_URL}/api/products`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Failed to fetch products");
         }
         return res.json();
       })
       .then((data) => setProducts(data))
-      .catch((err) => {
-        console.error("Failed to fetch products:", err);
-        setError("Failed to fetch products.");
-      });
+      .catch((err) => setError(err.message));
   }, []);
 
-  if (error) {
-    return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
-  }
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Products</h2>
-      {products.length === 0 ? (
-        <p>Loading...</p>
+    <div>
+      {error ? (
+        <p style={{ color: "red" }}>Failed to fetch products.</p>
       ) : (
         <ul>
-          {products.map((item) => (
-            <li key={item._id}>{item.name}</li>
+          {products.map((p) => (
+            <li key={p._id}>{p.name}</li>
           ))}
         </ul>
       )}
     </div>
   );
-}
+};
 
 export default Products;
