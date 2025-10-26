@@ -1,80 +1,81 @@
-import React, { useEffect, useState } from "react";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
 
-function App() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+// ---------------------------
+// 1️⃣ Initialize Express App
+// ---------------------------
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-  // 👇 your backend URL
-  const API_URL = "https://d-6ozb.onrender.com";
+// ---------------------------
+// 2️⃣ Middleware
+// ---------------------------
+app.use(cors({
+  origin: "*", // allow all origins (for Render frontend)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+app.use(express.json());
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${API_URL}/products`);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const data = await res.json();
-        setProducts(data);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("Failed to fetch products.");
-      } finally {
-        setLoading(false);
-      }
-    };
+// ---------------------------
+// 3️⃣ MongoDB Connection (Optional – if you use a database)
+// ---------------------------
+// Example: Add your MongoDB connection string from Render or Mongo Atlas
+// Replace below line with your actual connection string
+/*
+mongoose.connect("YOUR_MONGODB_CONNECTION_URL", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => console.error("❌ MongoDB Connection Error:", err));
+*/
 
-    fetchProducts();
-  }, []);
+// ---------------------------
+// 4️⃣ Example Product Schema (if using MongoDB)
+// ---------------------------
+/*
+const productSchema = new mongoose.Schema({
+  name: String,
+  price: Number,
+  description: String,
+  image: String,
+});
 
-  if (loading) return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
-  if (error) return <h2 style={{ textAlign: "center", color: "red" }}>{error}</h2>;
+const Product = mongoose.model("Product", productSchema);
+*/
 
-  return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>🛍️ Product List</h1>
-      <div style={styles.grid}>
-        {products.map((item) => (
-          <div key={item.id} style={styles.card}>
-            <h3>{item.name}</h3>
-            <p style={styles.price}>₹{item.price}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+// ---------------------------
+// 5️⃣ Routes
+// ---------------------------
 
-// Inline styling
-const styles = {
-  container: {
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-    backgroundColor: "#fafafa",
-    minHeight: "100vh",
-  },
-  header: {
-    textAlign: "center",
-    color: "#333",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "20px",
-    marginTop: "30px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "15px",
-    textAlign: "center",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-  },
-  price: {
-    color: "#007bff",
-    fontWeight: "bold",
-  },
-};
+// ✅ Test route
+app.get("/", (req, res) => {
+  res.send("Backend is running fine ✅");
+});
 
-export default App;
+// ✅ Example products API (static or database)
+app.get("/products", async (req, res) => {
+  try {
+    // --- If using MongoDB ---
+    // const products = await Product.find();
+
+    // --- If static (for testing) ---
+    const products = [
+      { id: 1, name: "Test Product 1", price: 100 },
+      { id: 2, name: "Test Product 2", price: 200 },
+    ];
+
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Failed to fetch products" });
+  }
+});
+
+// ---------------------------
+// 6️⃣ Start Server
+// ---------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
