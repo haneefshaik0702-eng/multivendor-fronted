@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// Replace this with your actual backend Render URL
-const BASE_URL = "https://your-backend-name.onrender.com";
+// ✅ Your actual backend Render URL
+const BASE_URL = "https://multivendor-backend-6ozb.onrender.com";
 
-// Create an axios instance for all API calls
+// Create an axios instance for all API requests
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -11,7 +11,7 @@ const api = axios.create({
   },
 });
 
-// Example: Fetch all products
+// ✅ Fetch all products
 export const fetchProducts = async () => {
   try {
     const response = await api.get("/products");
@@ -22,7 +22,7 @@ export const fetchProducts = async () => {
   }
 };
 
-// Example: Fetch a single product by ID
+// ✅ Fetch a single product by ID
 export const fetchProductById = async (id) => {
   try {
     const response = await api.get(`/products/${id}`);
@@ -33,7 +33,7 @@ export const fetchProductById = async (id) => {
   }
 };
 
-// Example: Add a new product
+// ✅ Add a new product
 export const addProduct = async (productData) => {
   try {
     const response = await api.post("/products", productData);
@@ -44,8 +44,16 @@ export const addProduct = async (productData) => {
   }
 };
 
-// Example: Delete a product
+// ✅ Delete a product
 export const deleteProduct = async (id) => {
   try {
     const response = await api.delete(`/products/${id}`);
-    return response.da
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};
+
+// Export the axios instance
+export default api;
