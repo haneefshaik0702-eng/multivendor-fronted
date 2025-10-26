@@ -1,59 +1,19 @@
-import axios from "axios";
+import express from "express";
+import cors from "cors";
 
-// ✅ Your actual backend Render URL
-const BASE_URL = "https://multivendor-backend-6ozb.onrender.com";
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-// Create an axios instance for all API requests
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+// ✅ Test route for your frontend
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend connected successfully 🎉" });
 });
 
-// ✅ Fetch all products
-export const fetchProducts = async () => {
-  try {
-    const response = await api.get("/products");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
-};
+// (Optional) Root route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
 
-// ✅ Fetch a single product by ID
-export const fetchProductById = async (id) => {
-  try {
-    const response = await api.get(`/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    throw error;
-  }
-};
-
-// ✅ Add a new product
-export const addProduct = async (productData) => {
-  try {
-    const response = await api.post("/products", productData);
-    return response.data;
-  } catch (error) {
-    console.error("Error adding product:", error);
-    throw error;
-  }
-};
-
-// ✅ Delete a product
-export const deleteProduct = async (id) => {
-  try {
-    const response = await api.delete(`/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    throw error;
-  }
-};
-
-// Export the axios instance
-export default api;
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
