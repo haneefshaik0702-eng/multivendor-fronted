@@ -4,18 +4,17 @@ function App() {
   const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
-    // Replace with your backend Render URL if needed
-    fetch("https://ckend-6ozb.onrender.com/api/test")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message || "Backend connected successfully"))
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-        setMessage("Failed to connect to backend");
-      });
+    fetch("https://multivendor-backend-6ozb.onrender.com/api/test")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to connect");
+        return res.json();
+      })
+      .then((data) => setMessage(data.message))
+      .catch(() => setMessage("❌ Failed to connect to backend"));
   }, []);
 
   return (
-    <div className="App">
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Welcome to Multivendor Frontend</h1>
       <p>{message}</p>
     </div>
